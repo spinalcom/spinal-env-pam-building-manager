@@ -22,12 +22,14 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
 import vuetify from './plugins/vuetify';
 
+import "./css/basic/reset.css";
+import "./css/basic/main.css";
 import "leaflet/dist/leaflet.css";
 import 'sweetalert2/dist/sweetalert2.min.css';
 
