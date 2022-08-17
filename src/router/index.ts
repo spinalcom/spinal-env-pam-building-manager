@@ -50,4 +50,10 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from,next) => {
+  const path = to.fullPath.replace(/.*\.html(?=.*)/,(el)=> "");
+  
+  return path || "/";
+})
+
 export default router

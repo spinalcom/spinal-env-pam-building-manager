@@ -70,7 +70,9 @@ import {
   MglPopup,
 } from "vue-mapbox";
 import { mapMutations } from "vuex";
-const mapStyle = require("./mapStyle.json");
+import * as mapStyle from "./mapStyle.json";
+
+console.log("mapStyle",mapStyle)
 
 export default Vue.extend({
   name: "MapComponent",

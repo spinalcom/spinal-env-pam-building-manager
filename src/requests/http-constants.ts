@@ -24,9 +24,10 @@
 
 import axios from "axios";
 
-const isDevEnv = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+// const isDevEnv = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
 
-const host = isDevEnv ? "http://localhost:8064" : "https://api-pam-spinalcom.spinalcom.com";
+// const host = isDevEnv ? "http://localhost:8064" : "https://api-pam-spinalcom.spinalcom.com";
+const host = "http://localhost:8065"
 
 export const HTTP = axios.create({ baseURL: `${host}/api/v1/pam` });
 export const BOS_HTTP_REQUEST = axios.create({ baseURL: `${host}/api/v1/building` });

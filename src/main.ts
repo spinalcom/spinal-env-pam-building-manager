@@ -26,18 +26,20 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import vuetify from './plugins/vuetify';
 
 import "./css/basic/reset.css";
 import "./css/basic/main.css";
 import "leaflet/dist/leaflet.css";
 import 'sweetalert2/dist/sweetalert2.min.css';
 
+import vuetify from './plugins/vuetify';
+
 Vue.config.productionTip = false
 
 new Vue({
-  router,
+  // router,
   store,
   vuetify,
   render: h => h(App)
+  // render: h => h(HomeView)
 }).$mount('#app')

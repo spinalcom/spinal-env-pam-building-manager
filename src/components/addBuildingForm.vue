@@ -23,67 +23,71 @@ with this file. If not, see
 -->
 
 <template>
-  <v-container>
-    <v-form class="form"
-            ref="form"
-            lazy-validation
-            @submit.prevent="submit">
-      <v-text-field label="Name"
-                    v-model.trim="building.name"
-                    :rules="[requiredValidation]"
-                    outlined></v-text-field>
+  <div class="formContainer">
+    <v-form class="form" ref="form" lazy-validation @submit.prevent="submit">
+      <v-text-field
+        label="Name"
+        v-model.trim="building.name"
+        :rules="[requiredValidation]"
+        outlined
+      ></v-text-field>
 
-      <v-text-field label="Alias"
-                    v-model.trim="building.aliasName"
-                    outlined></v-text-field>
+      <v-text-field
+        label="Alias"
+        v-model.trim="building.aliasName"
+        outlined
+      ></v-text-field>
 
       <!-- @change="addressChanged" -->
 
-      <places ref="places"
-              class="addressInput"
-              v-model="building.address"
-              :rules="[requiredValidation]"
-              placeholder="Address"> </places>
+      <places
+        ref="places"
+        class="addressInput"
+        v-model="building.address"
+        :rules="[requiredValidation]"
+        placeholder="Address"
+      >
+      </places>
 
-      <v-text-field label="BOS Url"
-                    :rules="[requiredValidation]"
-                    v-model.trim="building.urlBos"
-                    outlined></v-text-field>
+      <v-text-field
+        label="BOS Url"
+        :rules="[requiredValidation]"
+        v-model.trim="building.urlBos"
+        outlined
+      ></v-text-field>
 
-      <v-text-field label="API Url"
-                    :rules="[requiredValidation]"
-                    v-model.trim="building.apiUrl"
-                    outlined></v-text-field>
+      <v-text-field
+        label="API Url"
+        :rules="[requiredValidation]"
+        v-model.trim="building.apiUrl"
+        outlined
+      ></v-text-field>
 
-      <v-text-field label="API client_id"
-                    v-model.trim="building.clientId"
-                    outlined></v-text-field>
+      <v-text-field
+        label="API client_id"
+        v-model.trim="building.clientId"
+        outlined
+      ></v-text-field>
 
-      <v-text-field label="API client_secret"
-                    v-model.trim="building.clientSecret"
-                    outlined></v-text-field>
+      <v-text-field
+        label="API client_secret"
+        v-model.trim="building.clientSecret"
+        outlined
+      ></v-text-field>
 
-      <v-textarea outlined
-                  v-model.trim="building.description"
-                  name="input-7-2"
-                  label="Description"></v-textarea>
+      <v-textarea
+        outlined
+        v-model.trim="building.description"
+        name="input-7-2"
+        label="Description"
+      ></v-textarea>
 
-      <v-row align="center"
-             justify="end">
-        <v-btn class="formButton"
-               color="error"
-               @click="cancel">
-          cancel
-        </v-btn>
-        <v-btn class=" formButton"
-               type="submit"
-               color="primary">
-          save
-        </v-btn>
+      <v-row align="center" justify="end">
+        <v-btn class="formButton" color="error" @click="cancel"> cancel </v-btn>
+        <v-btn class="formButton" type="submit" color="primary"> save </v-btn>
       </v-row>
-
     </v-form>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -118,10 +122,10 @@ export default {
     };
   },
   mounted() {
-    this.$refs["places"].placesAutocomplete.on("locate", this.locateOnMap);
     if (this.edit && this.buildingToEdit) {
       this.building = this.buildingToEdit;
     }
+    this.$refs["places"].placesAutocomplete.on("locate", this.locateOnMap);
   },
   methods: {
     addressChanged(val) {
@@ -181,28 +185,33 @@ export default {
 </script>
 
 <style scoped>
-.form {
+.formContainer {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+
+.formContainer .form {
   width: 98%;
   height: 99%;
-  background: #fff;
   border-radius: 15px;
   padding: 5px;
 }
 
-.form .addressInput {
+.formContainer .form .addressInput {
   height: 56px;
   margin-bottom: 20px;
   border: 1px solid grey;
 }
 
-.form .formButton {
+.formContainer .form .formButton {
   width: 100px;
   margin: 5px 10px;
 }
 </style>
 
 <style>
-.form .algolia-places .ap-input-icon {
+.formContainer .form .algolia-places .ap-input-icon {
   bottom: 20px !important;
 }
 </style>

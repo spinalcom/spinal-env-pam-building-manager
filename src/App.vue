@@ -24,19 +24,23 @@ with this file. If not, see
 
 <template>
   <v-app class="application">
-
     <v-main>
-      <router-view />
+      <!-- <router-view /> -->
+      <HomeView />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import HomeView from './views/HomeView.vue'
+
 
 export default Vue.extend({
   name: "App",
-
+  components: {
+    HomeView
+  },
   data: () => ({
     //
   }),
