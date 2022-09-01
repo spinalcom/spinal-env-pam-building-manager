@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 SpinalCom - www.spinalcom.com
+ * Copyright 2020 SpinalCom - www.spinalcom.com
  *
  * This file is part of SpinalCore.
  *
@@ -21,21 +21,8 @@
  * with this file. If not, see
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
-import 'core-js/stable';
-import Vue from 'vue';
-import App from './App.vue';
-import store from './store';
 
-// import './css/basic/reset.css';
-// import './css/basic/main.css';
-import 'leaflet/dist/leaflet.css';
-import 'sweetalert2/dist/sweetalert2.min.css';
-
-import vuetify from './plugins/vuetify';
-Vue.config.productionTip = false;
-
-new Vue({
-  store,
-  vuetify,
-  render: (h) => h(App),
-}).$mount('#app');
+declare module '*.vue' {
+  import Vue from 'vue';
+  export default Vue;
+}

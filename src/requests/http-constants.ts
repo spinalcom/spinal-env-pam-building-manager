@@ -1,19 +1,19 @@
 /*
  * Copyright 2022 SpinalCom - www.spinalcom.com
- * 
+ *
  * This file is part of SpinalCore.
- * 
+ *
  * Please read all of the following terms and conditions
  * of the Free Software license Agreement ("Agreement")
  * carefully.
- * 
+ *
  * This Agreement is a legally binding contract between
  * the Licensee (as defined below) and SpinalCom that
  * sets forth the terms and conditions that govern your
  * use of the Program. By installing and/or using the
  * Program, you agree to abide by all the terms and
  * conditions stated or referenced herein.
- * 
+ *
  * If you do not agree to abide by these terms and
  * conditions, do not demonstrate your acceptance and do
  * not install or use the Program.
@@ -22,15 +22,17 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-import axios from "axios";
+import axios from 'axios';
 
 // const isDevEnv = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
 
 // const host = isDevEnv ? "http://localhost:8064" : "https://api-pam-spinalcom.spinalcom.com";
-const host = "http://localhost:8065"
+const host = process.env.SPINAL_API_URL;
 
 export const HTTP = axios.create({ baseURL: `${host}/api/v1/pam` });
-export const BOS_HTTP_REQUEST = axios.create({ baseURL: `${host}/api/v1/building` });
+export const BOS_HTTP_REQUEST = axios.create({
+  baseURL: `${host}/api/v1/building`,
+});
 
 // if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
 //   baseURL = "http://localhost:8064/api/v1/pam";
@@ -41,7 +43,6 @@ export const BOS_HTTP_REQUEST = axios.create({ baseURL: `${host}/api/v1/building
 // const instance = axios.create({
 //   baseURL: baseURL
 // });
-
 
 // request header
 // instance.interceptors.request.use(
@@ -60,4 +61,3 @@ export const BOS_HTTP_REQUEST = axios.create({ baseURL: `${host}/api/v1/building
 // export const HTTP1 = axios.create({
 // baseURL: baseURL
 // });
-

@@ -24,41 +24,41 @@ with this file. If not, see
 
 <template>
   <div class="mapContent">
-    <MglMap ref="mglMapRef"
-            :accessToken="accessToken"
-            :mapStyle.sync="mapStyle"
-            @load="onMapLoaded"
-            :minZoom="0"
-            :maxZoom="24">
-      <MglMarker v-for="building in buildings"
-                 :key="building.id"
-                 :color="building.color"
-                 :coordinates="getCoordinates(building)"
-                 @click="markerOnClick">
-        <MglPopup :coordinates="getCoordinates(building)"
-                  anchor="top"
-                  :closeButton="false">
-
+    <MglMap
+      ref="mglMapRef"
+      :accessToken="accessToken"
+      :mapStyle.sync="mapStyle"
+      @load="onMapLoaded"
+      :minZoom="0"
+      :maxZoom="24"
+    >
+      <MglMarker
+        v-for="building in buildings"
+        :key="building.id"
+        :color="building.color"
+        :coordinates="getCoordinates(building)"
+        @click="markerOnClick"
+      >
+        <MglPopup
+          :coordinates="getCoordinates(building)"
+          anchor="top"
+          :closeButton="false"
+        >
           <div class="popupContent">
-            <div class="name"
-                 style="fontWeight: bold">{{building.name}}</div>
-            <div class="address">{{building.address}}</div>
+            <div class="name" style="fontweight: bold">{{ building.name }}</div>
+            <div class="address">{{ building.address }}</div>
           </div>
-
         </MglPopup>
       </MglMarker>
       <MglNavigationControl position="top-right" />
-      <MglGeolocateControl :showUserLocation="true"
-                           position="top-right" />
-
+      <MglGeolocateControl :showUserLocation="true" position="top-right" />
     </MglMap>
   </div>
-
 </template>
 
 <script>
-import Vue from "vue";
-import Mapbox from "mapbox-gl";
+import Vue from 'vue';
+import Mapbox from 'mapbox-gl';
 import {
   MglMap,
   MglNavigationControl,
@@ -68,14 +68,15 @@ import {
   MglFullscreenControl,
   MglScaleControl,
   MglPopup,
-} from "vue-mapbox";
-import { mapMutations } from "vuex";
-import * as mapStyle from "./mapStyle.json";
+} from 'vue-mapbox/dist/vue-mapbox.common';
+import 'vue-mapbox/dist/vue-mapbox.css';
+import { mapMutations } from 'vuex';
+import * as mapStyle from './mapStyle.json';
 
-console.log("mapStyle",mapStyle)
+console.log('mapStyle', mapStyle);
 
 export default Vue.extend({
-  name: "MapComponent",
+  name: 'MapComponent',
   props: { buildings: { default: () => [] } },
   components: {
     MglMap,
@@ -89,10 +90,9 @@ export default Vue.extend({
   },
   data() {
     return {
-      username: "moussabaradji",
-      styleId: "cl3stdopz000q15mjloidgds2",
-      accessToken:
-        "pk.eyJ1IjoibW91c3NhYmFyYWRqaSIsImEiOiJjbDNzaWY2bWEwMGx3M25xc2JpanA0d2E4In0.xWaNYzLeHabH4W-aF0qgpg", // your access token. Needed if you using Mapbox maps
+      username: process.env.MAPBOX_USERNAME,
+      styleId: process.env.MAPBOX_STYLEID,
+      accessToken: process.env.MAPBOX_ACCESSTOKEN,
       mapStyle: mapStyle,
     };
   },
@@ -113,7 +113,7 @@ export default Vue.extend({
   //     });
   // },
   methods: {
-    ...mapMutations("mapStore", ["setComponent"]),
+    ...mapMutations('mapStore', ['setComponent']),
     async onMapLoaded(event) {
       // in component
       // or just to store if you want have access from other components
@@ -136,13 +136,13 @@ export default Vue.extend({
     },
 
     markerOnClick(res) {
-      console.log("res", res);
+      console.log('res', res);
     },
   },
 });
 </script>
 
-<style scoped>
+<style>
 .mapContent {
   width: 100%;
   height: 100%;
