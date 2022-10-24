@@ -55,7 +55,7 @@ with this file. If not, see
 </template>
 
 <script lang="ts">
-import { IList } from "../interfaces/IList";
+import { IList } from "../../interfaces/IList";
 
 export default {
   name: "listComponent",

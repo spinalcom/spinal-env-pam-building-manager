@@ -25,88 +25,42 @@ with this file. If not, see
 <template>
   <v-container class="homeContainer"
                fluid>
-      <div class="mapContainer">
-        <map-view :buildings="searchedData"></map-view>
-      </div>
-     
+    <div class="mapContainer">
+      <map-view :buildings="searchedData"></map-view>
+    </div>
 
-      <div class="appContainer"
-           v-if="state === STATES.normal">
+    <div class="appContainer">
+      <building-view v-if="state === STATES.normal"
+                     :buildings="searchedData"
+                     @addBuilding="addBuilding"
+                     @viewOnMap="viewOnMap"
+                     @edit="editBuilding"
+                     @delete="deleteBuilding"
+                     @filter="setSearchText"></building-view>
 
-        <div class="header">
-          <div class="header_col left">
-            <v-text-field label="Search"
-                          dark
-                          append-icon="mdi-magnify"
-                          v-model="searchText"></v-text-field>
-          </div>
+      <add-building-view v-else-if="state === STATES.creating || state === STATES.editing"
+                         :isEdit="state === STATES.editing"
+                         :buildingToEdit="buildingToEdit"
+                         @geoLocate="geoLocate"
+                         @cancel="cancelCreation"
+                         @submit="addbuildingToPatrimoine"></add-building-view>
 
-          <div class="header_col right">
-            <button class="addButton"
-                    @click="addBuilding">Add Building</button>
-          </div>
-
-        </div>
-        <div class="content">
-          <patrimoine-card v-for="building in searchedData"
-                           :key="building.id"
-                           :data="building"
-                           @viewOnMap="viewOnMap"
-                           @edit="editBuilding"
-                           @delete="deleteBuilding"></patrimoine-card>
-        </div>
-      </div>
-
-      <div class="appContainer"
-           v-else-if="state === STATES.creating || state === STATES.editing">
-        <div class="header creationHeader">
-
-          <v-btn outlined
-                 color="#ffffff"
-                 @click="cancelCreation">
-            <v-icon left>
-              mdi-arrow-left
-            </v-icon>
-            BACK
-          </v-btn>
-
-          <div class="text-h5">
-            {{state === STATES.editing ? "Edit Building" : "Add Building"}}
-          </div>
-          <div class="text-h5"></div>
-        </div>
-        <div class="content">
-          <add-patrimoine-form :edit="state === STATES.editing"
-                               :buildingToEdit="buildingToEdit"
-                               @geoLocate="geoLocate"
-                               @cancel="cancelCreation"
-                               @submit="addbuildingToPatrimoine">
-          </add-patrimoine-form>
-        </div>
-
-      </div>
-
-      <div class="appContainer"
+      <div class="content loadingContent"
            v-else>
-        <div class="content loadingContent">
-          <div v-if="state === STATES.loading">loading...</div>
-          <div v-else-if="state === STATES.error">
-            Error
-          </div>
-        </div>
-
+        <div v-if="state === STATES.loading">loading...</div>
+        <div v-else-if="state === STATES.error">Error</div>
       </div>
+    </div>
   </v-container>
-
 </template>
 
 <script>
 import Vue from "vue";
 import MapView from "../components/Map.vue";
-import ListView from "../components/List.vue";
+import ListView from "../components/old/List.vue";
 import { mapActions, mapState } from "vuex";
-// import PatrimoineCard from "../components/patrimoine-card.vue";
-import AddPatrimoineForm from "../components/addBuilding.vue";
+import BuildingView from "../components/views/buildingView.vue";
+import AddBuildingView from "../components/views/addBuildingView.vue";
 import Swal from "sweetalert2";
 import * as lodash from "lodash";
 
@@ -115,8 +69,8 @@ export default Vue.extend({
   components: {
     MapView,
     ListView,
-    PatrimoineCard,
-    AddPatrimoineForm,
+    AddBuildingView,
+    BuildingView,
   },
   data() {
     this.STATES = Object.freeze({
@@ -139,6 +93,7 @@ export default Vue.extend({
   mounted() {
     this.initializeData();
   },
+
   methods: {
     ...mapActions("digitalTwinStore", [
       "getAllDigitalTwin",
@@ -166,6 +121,10 @@ export default Vue.extend({
       this.state = this.STATES.normal;
     },
 
+    setSearchText(text) {
+      this.searchText = text;
+    },
+
     async addbuildingToPatrimoine({ data, create }) {
       this.state = this.STATES.loading;
       try {
@@ -187,8 +146,8 @@ export default Vue.extend({
     },
 
     editBuilding(item) {
-      this.state = this.STATES.editing;
       this.buildingToEdit = item;
+      this.state = this.STATES.editing;
     },
 
     deleteBuilding(item) {
@@ -230,10 +189,12 @@ export default Vue.extend({
         : this.buildings;
     },
   },
+
   computed: {
     ...mapState("digitalTwinStore", ["buildings"]),
     ...mapState("mapStore", ["component"]),
   },
+
   watch: {
     buildings() {
       this.searchAndFilterTable();
@@ -246,14 +207,13 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-
-.homeContainer  {
-  width: 100%;
+.homeContainer {
+  width: 100vw;
   height: 100vh;
   flex-direction: row;
   display: flex;
   margin: 0px !important;
-  background: red;
+  padding: 0px !important;
 }
 
 .homeContainer .mapContainer,
@@ -268,13 +228,14 @@ export default Vue.extend({
 }
 
 .homeContainer .appContainer {
-  background: yellow;
   flex: 0 0 35vw;
+}
+
+.homeContainer .appContainer .content.loadingContent {
+  height: 98vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 5px;
+  justify-content: center;
 }
 
 /* .homeContainer .mapContainer {
@@ -294,7 +255,7 @@ export default Vue.extend({
 
 } */
 
-.homeContainer .appContainer .header {
+/* .homeContainer .appContainer .header {
   width: 98%;
   height: 70px;
   background: #14202c;
@@ -345,7 +306,7 @@ export default Vue.extend({
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 </style>
 
 <style>
@@ -356,4 +317,4 @@ export default Vue.extend({
 .confirmBtn {
   background: #4caf50 !important;
 }
-</style>
+</style> -->

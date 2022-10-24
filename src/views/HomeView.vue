@@ -23,356 +23,106 @@ with this file. If not, see
 -->
 
 <template>
-  <v-container class="homeContainer" fluid>
+  <div class="list_container">
     <div class="mapContainer">
-      <map-view :buildings="searchedData"></map-view>
+      <Map :buildings="buildings" />
     </div>
 
-    <div class="appContainer">
-      <building-view
-        v-if="state === STATES.normal"
-        :buildings="searchedData"
-        @addBuilding="addBuilding"
-        @viewOnMap="viewOnMap"
-        @edit="editBuilding"
-        @delete="deleteBuilding"
-        @filter="setSearchText"
-      ></building-view>
-
-      <add-building-view
-        v-else-if="state === STATES.creating || state === STATES.editing"
-        :isEdit="state === STATES.editing"
-        :buildingToEdit="buildingToEdit"
-        @geoLocate="geoLocate"
-        @cancel="cancelCreation"
-        @submit="addbuildingToPatrimoine"
-      ></add-building-view>
-
-      <div class="content loadingContent" v-else>
-        <div v-if="state === STATES.loading">loading...</div>
-        <div v-else-if="state === STATES.error">Error</div>
-      </div>
+    <div class="listContainer">
+      <PortofolioView :portofolios="portofolios"
+                      @createPortofolio="createPortofolio"
+                      @editPortofolio="editPortofolio"
+                      @deletePortofolio="deletePortofolio"
+                      @addBuilding="addBuilding"
+                      @editBuilding="editBuilding"
+                      @deleteBuilding="deleteBuilding" />
     </div>
-
-    <!-- <div class="appContainer"
-           v-if="state === STATES.normal">
-
-        <div class="header">
-          <div class="header_col left">
-            <v-text-field label="Search"
-                          dark
-                          append-icon="mdi-magnify"
-                          v-model="searchText"></v-text-field>
-          </div>
-
-          <div class="header_col right">
-            <button class="addButton"
-                    @click="addBuilding">Add Building</button>
-          </div>
-
-        </div>
-        <div class="content">
-          <patrimoine-card v-for="building in searchedData"
-                           :key="building.id"
-                           :data="building"
-                           @viewOnMap="viewOnMap"
-                           @edit="editBuilding"
-                           @delete="deleteBuilding"></patrimoine-card>
-        </div>
-      </div> -->
-
-    <!-- <div
-      class="appContainer"
-      v-else-if="state === STATES.creating || state === STATES.editing"
-    >
-      <div class="header creationHeader">
-        <v-btn outlined color="#ffffff" @click="cancelCreation">
-          <v-icon left> mdi-arrow-left </v-icon>
-          BACK
-        </v-btn>
-
-        <div class="text-h5">
-          {{ state === STATES.editing ? "Edit Building" : "Add Building" }}
-        </div>
-        <div class="text-h5"></div>
-      </div>
-      <div class="content">
-        <add-patrimoine-form
-          :edit="state === STATES.editing"
-          :buildingToEdit="buildingToEdit"
-          @geoLocate="geoLocate"
-          @cancel="cancelCreation"
-          @submit="addbuildingToPatrimoine"
-        >
-        </add-patrimoine-form>
-      </div>
-    </div> -->
-  </v-container>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
+import { log } from "console";
 import Vue from "vue";
-import MapView from "../components/Map.vue";
-import ListView from "../components/List.vue";
-import { mapActions, mapState } from "vuex";
-// import PatrimoineCard from "../components/patrimoine-card.vue";
-// import AddPatrimoineForm from "../components/addBuilding.vue";
-import BuildingView from "../components/views/buildingView.vue";
-import AddBuildingView from "../components/views/addBuildingView.vue";
-import Swal from "sweetalert2";
-import * as lodash from "lodash";
+import { Component, Prop } from "vue-property-decorator";
+import { IBuilding, IPortofolio } from "../interfaces/IBuilding";
+import Map from "./map/MapView.vue";
+import PortofolioView from "./portofolio/PortofolioView.vue";
 
-export default Vue.extend({
-  name: "Home",
+@Component({
   components: {
-    MapView,
-    ListView,
-    // PatrimoineCard,
-    // AddPatrimoineForm,
-    AddBuildingView,
-    BuildingView,
+    Map,
+    PortofolioView,
   },
-  data() {
-    this.STATES = Object.freeze({
-      normal: 0,
-      creating: 1,
-      editing: 2,
-      loading: 3,
-      error: 4,
-    });
-    return {
-      state: this.STATES.normal,
-      buildingToEdit: null,
-      searchText: "",
-      searchedData: [],
-    };
-  },
-  created() {
-    this.searchAndFilterTable = lodash.debounce(this.filterBuilding, 500);
-  },
-  mounted() {
-    this.initializeData();
-  },
-  methods: {
-    ...mapActions("digitalTwinStore", [
-      "getAllDigitalTwin",
-      "deleteDigitalTwin",
-      "addDigitalTwin",
-      "editDigitaltwin",
-    ]),
+})
+class ListComponent extends Vue {
+  async mounted() {
+    await this.$store.dispatch("portofolioStore/getAllportofolio");
+  }
 
-    async initializeData() {
-      try {
-        this.state = this.STATES.loading;
-        await this.getAllDigitalTwin();
-        this.state = this.STATES.normal;
-      } catch (error) {
-        console.error(error);
-        this.state = this.STATES.error;
-      }
-    },
+  get portofolios(): IPortofolio[] {
+    if (!this.$store.state.portofolioStore.portofolios) return [];
 
-    addBuilding() {
-      this.state = this.STATES.creating;
-    },
+    return this.$store.state.portofolioStore.portofolios;
+  }
 
-    cancelCreation() {
-      this.state = this.STATES.normal;
-    },
+  get buildings(): IBuilding[] {
+    if (!this.$store.state.portofolioStore.portofolios) return [];
 
-    setSearchText(text) {
-      this.searchText = text;
-    },
+    return this.$store.state.portofolioStore.portofolios.reduce(
+      (liste: IBuilding[], { buildings }: IPortofolio) => {
+        liste.push(...buildings);
+        return liste;
+      },
+      []
+    );
+  }
 
-    async addbuildingToPatrimoine({ data, create }) {
-      this.state = this.STATES.loading;
-      try {
-        if (create) await this.addDigitalTwin(data);
-        else await this.editDigitaltwin({ id: data.id, data });
-        this.state = this.STATES.normal;
-      } catch (error) {
-        this.state = this.STATES.error;
-      }
-    },
+  createPortofolio(data) {
+    this.$emit("createPortofolio", data);
+  }
 
-    viewOnMap(item) {
-      const { lat, lng } = item.location;
-      this.component.actions.easeTo({
-        zoom: 18,
-        center: { lng, lat },
-        duration: 500,
-      });
-    },
+  editPortofolio(data) {
+    this.$emit("editPortofolio", data);
+  }
 
-    editBuilding(item) {
-      this.buildingToEdit = item;
-      this.state = this.STATES.editing;
-    },
+  deletePortofolio(data) {
+    this.$emit("deletePortofolio", data);
+  }
 
-    deleteBuilding(item) {
-      Swal.fire({
-        title: "Are you sure ?",
-        text: "You won't be able to revert this!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonClass: "confirmBtn",
-        cancelButtonClass: "cancelBtn",
-        confirmButtonText: "Yes",
-        cancelButtonText: "No",
-      }).then(async (result) => {
-        if (result.isConfirmed) await this.deleteDigitalTwin(item.id);
-      });
-    },
+  addBuilding(data) {
+    this.$emit("addBuilding", data);
+  }
 
-    geoLocate() {
-      // mapbox.GeolocateControl
-      const geoControl = this.component.map._controls.find(
-        (el) => el.constructor.name === "GeolocateControl"
-      );
+  editBuilding(data) {
+    this.$emit("editBuilding", data);
+  }
 
-      if (geoControl) {
-        geoControl.trigger();
-      }
-    },
+  deleteBuilding(data) {
+    this.$emit("deleteBuilding", data);
+  }
+}
 
-    // changeSearchText: lodash.debounce((value) => {
-    //   // this.searchText = value;
-    //   console.log();
-    // }, 400),
-
-    filterBuilding() {
-      this.searchedData = !!this.searchText
-        ? this.buildings.filter((el) =>
-            el.name.toLowerCase().includes(this.searchText.toLowerCase())
-          )
-        : this.buildings;
-    },
-  },
-  computed: {
-    ...mapState("digitalTwinStore", ["buildings"]),
-    ...mapState("mapStore", ["component"]),
-  },
-  watch: {
-    buildings() {
-      this.searchAndFilterTable();
-    },
-    searchText() {
-      this.searchAndFilterTable();
-    },
-  },
-});
+export default ListComponent;
 </script>
 
-<style scoped>
-.homeContainer {
-  width: 100vw;
-  height: 100vh;
-  flex-direction: row;
-  display: flex;
-  margin: 0px !important;
-  padding: 0px !important;
-}
-
-.homeContainer .mapContainer,
-.homeContainer .appContainer {
-  height: 100%;
-  padding: 0px !important;
-  overflow: hidden;
-}
-
-.homeContainer .mapContainer {
-  flex: 0 0 65vw;
-}
-
-.homeContainer .appContainer {
-  flex: 0 0 35vw;
-}
-
-.homeContainer .appContainer .content.loadingContent {
-  height: 98vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* .homeContainer .mapContainer {
+<style scoped lang="scss">
+.list_container {
   width: 100%;
   height: 100%;
-} */
-
-/* .homeContainer .appContainer {
+  flex-direction: row;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-  overflow: hidden;    
-  background: #14202c;
-  border-left: 5px solid white; 
+  .mapContainer {
+    height: 100%;
+    padding: 0px !important;
+    overflow: hidden;
+    flex: 0 0 50vw;
+  }
 
-} */
-
-
-/* .homeContainer .appContainer .header {
-  width: 98%;
-  height: 70px;
-  background: #14202c;
-  padding: 10px;
-  border-radius: 15px;
-  margin-bottom: 10px;
-  margin-top: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #fff;
-}
-
-.homeContainer .appContainer .header .header_col.left {
-  flex: 0 0 70%;
-}
-
-.homeContainer .appContainer .header .header_col.right {
-  flex: 0 0 30%;
-  display: flex;
-  justify-content: end;
-}
-
-.homeContainer .appContainer .header.creationHeader {
-  display: flex;
-  justify-content: space-between;
-}
-
-.homeContainer .appContainer .header .addButton {
-  width: 150px;
-  height: 40px;
-  border: 1px solid #fff;
-  border-radius: 10px;
-  text-transform: uppercase;
-}
-
-.homeContainer .appContainer .content {
-  width: 98%;
-  height: 90vh;
-  padding: 10px 0;
-  background: #f1f5f5;
-  border-radius: 10px;
-  overflow: auto;
-}
-
-.homeContainer .appContainer .content.loadingContent {
-  height: 98vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-} */
-</style>
-
-<style>
-.cancelBtn {
-  background: #ff5252 !important;
-}
-
-.confirmBtn {
-  background: #4caf50 !important;
+  .listContainer {
+    height: 100%;
+    padding: 0px !important;
+    overflow: hidden;
+    flex: 0 0 50vw;
+  }
 }
 </style>

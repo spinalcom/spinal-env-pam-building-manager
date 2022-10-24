@@ -22,6 +22,9 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
+import { IApiRoute } from "./IApiRoute";
+import { IApp } from "./IApp";
+
 export interface IBuilding {
     name: string;
     aliasName: string;
@@ -31,5 +34,14 @@ export interface IBuilding {
     clientSecret: string;
     address: string;
     description: string;
-    [key: string]: string;
+    location: any;
+    appIds?: string[];
+    apiIds?: string[];
+}
+
+export interface IPortofolio {
+    [key: string]: any;
+    apps: IApp[];
+    apis: IApiRoute[];
+    buildings: IBuilding[];
 }

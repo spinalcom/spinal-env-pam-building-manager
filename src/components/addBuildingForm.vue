@@ -24,67 +24,59 @@ with this file. If not, see
 
 <template>
   <div class="formContainer">
-    <v-form class="form" ref="form" lazy-validation @submit.prevent="submit">
-      <v-text-field
-        label="Name"
-        v-model.trim="building.name"
-        :rules="[requiredValidation]"
-        outlined
-      ></v-text-field>
+    <v-form class="form"
+            ref="form"
+            lazy-validation
+            @submit.prevent="submit">
+      <v-text-field label="Name"
+                    v-model.trim="building.name"
+                    :rules="[requiredValidation]"
+                    outlined></v-text-field>
 
-      <v-text-field
-        label="Alias"
-        v-model.trim="building.aliasName"
-        outlined
-      ></v-text-field>
+      <v-text-field label="Alias"
+                    v-model.trim="building.aliasName"
+                    outlined></v-text-field>
 
       <!-- @change="addressChanged" -->
 
-      <places
-        ref="places"
-        class="addressInput"
-        v-model="building.address"
-        :rules="[requiredValidation]"
-        placeholder="Address"
-      >
+      <places ref="places"
+              class="addressInput"
+              v-model="building.address"
+              :rules="[requiredValidation]"
+              placeholder="Address">
       </places>
 
-      <v-text-field
-        label="BOS Url"
-        :rules="[requiredValidation]"
-        v-model.trim="building.urlBos"
-        outlined
-      ></v-text-field>
+      <v-text-field label="BOS Url"
+                    :rules="[requiredValidation]"
+                    v-model.trim="building.urlBos"
+                    outlined></v-text-field>
 
-      <v-text-field
-        label="API Url"
-        :rules="[requiredValidation]"
-        v-model.trim="building.apiUrl"
-        outlined
-      ></v-text-field>
+      <v-text-field label="API Url"
+                    :rules="[requiredValidation]"
+                    v-model.trim="building.apiUrl"
+                    outlined></v-text-field>
 
-      <v-text-field
-        label="API client_id"
-        v-model.trim="building.clientId"
-        outlined
-      ></v-text-field>
+      <v-text-field label="API client_id"
+                    v-model.trim="building.clientId"
+                    outlined></v-text-field>
 
-      <v-text-field
-        label="API client_secret"
-        v-model.trim="building.clientSecret"
-        outlined
-      ></v-text-field>
+      <v-text-field label="API client_secret"
+                    v-model.trim="building.clientSecret"
+                    outlined></v-text-field>
 
-      <v-textarea
-        outlined
-        v-model.trim="building.description"
-        name="input-7-2"
-        label="Description"
-      ></v-textarea>
+      <v-textarea outlined
+                  v-model.trim="building.description"
+                  name="input-7-2"
+                  label="Description"></v-textarea>
 
-      <v-row align="center" justify="end">
-        <v-btn class="formButton" color="error" @click="cancel"> cancel </v-btn>
-        <v-btn class="formButton" type="submit" color="primary"> save </v-btn>
+      <v-row align="center"
+             justify="end">
+        <v-btn class="formButton"
+               color="error"
+               @click="cancel"> cancel </v-btn>
+        <v-btn class="formButton"
+               type="submit"
+               color="primary"> save </v-btn>
       </v-row>
     </v-form>
   </div>

@@ -22,19 +22,11 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-import Vue from 'vue'
-import Vuex from 'vuex'
-import { digitalTwinStore } from './digitalTwinStore';
-import { portofolioStore } from './portofolioStore';
-import { appsStore } from './appsStore';
-import { mapStore } from "./mapStore";
-Vue.use(Vuex)
-
-export default new Vuex.Store({
-  modules: {
-    digitalTwinStore,
-    portofolioStore,
-    appsStore,
-    mapStore
-  }
-})
+export interface IApiRoute {
+    id?: string;
+    group: string;
+    method: string;
+    route: string;
+    scoped: string;
+    tag: string;
+}

@@ -25,11 +25,17 @@ import 'core-js/stable';
 import Vue from 'vue';
 import App from './App.vue';
 import store from './store';
+import VueSweetalert2 from "vue-sweetalert2";
 
 // import './css/basic/reset.css';
 // import './css/basic/main.css';
 import 'leaflet/dist/leaflet.css';
 import 'sweetalert2/dist/sweetalert2.min.css';
+
+Vue.use(VueSweetalert2, {
+  confirmButtonColor: "#41b882",
+  cancelButtonColor: "#ff7674",
+});
 
 import vuetify from './plugins/vuetify';
 Vue.config.productionTip = false;

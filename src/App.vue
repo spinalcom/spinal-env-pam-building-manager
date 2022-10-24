@@ -25,19 +25,19 @@ with this file. If not, see
 <template>
   <v-app class="application">
     <v-main>
-      <HomeView />
+      <HomePage />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import HomeView from './views/HomeView.vue';
+import Vue from "vue";
+import HomePage from "./pages/HomePage.vue";
 
 export default Vue.extend({
-  name: 'App',
+  name: "App",
   components: {
-    HomeView,
+    HomePage,
   },
   data: () => ({
     //

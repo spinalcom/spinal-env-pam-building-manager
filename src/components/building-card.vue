@@ -99,7 +99,7 @@ with this file. If not, see
 import { io } from "socket.io-client";
 
 export default {
-  name: "PatrimoineCard",
+  name: "BuildingCard",
   props: {
     data: {
       required: true,
@@ -132,10 +132,12 @@ export default {
   },
   computed: {
     getFloorsCount: function () {
-      return this.data.details["geographicFloor"] || 0;
+      if (!this.data.detail) return 0;
+
+      return this.data.detail["geographicFloor"] || 0;
     },
     getFloorsArea: function () {
-      return Number(this.data.details.area).toFixed(2);
+      return Number(this.data.detail?.area || 0).toFixed(2);
     },
   },
 };
@@ -143,8 +145,8 @@ export default {
 
 <style scoped>
 .card-container {
-  width: 95%;
-  height: 250px;
+  width: 90%;
+  height: 200px;
   background: #fff;
   border-radius: 10px;
   padding: 5px;
@@ -160,6 +162,7 @@ export default {
   text-transform: uppercase;
   font-size: 1.2em;
   border-bottom: 1px solid #eaeef0;
+  position: relative;
 }
 
 .card-container .name_div .color {
