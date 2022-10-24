@@ -24,15 +24,15 @@
 
 import axios from 'axios';
 
-// const isDevEnv = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+const endpoint = "/api/v1/pam";
+const host = (process.env.SPINAL_API_URL || "").replace(`/\/$/`, el => "");
+const baseURL = host.match(new RegExp(endpoint)) ? host : host + endpoint;
 
-// const host = isDevEnv ? "http://localhost:8064" : "https://api-pam-spinalcom.spinalcom.com";
-const host = process.env.SPINAL_API_URL;
+export const HTTP = axios.create({ baseURL });
 
-export const HTTP = axios.create({ baseURL: `${host}/api/v1/pam` });
-export const BOS_HTTP_REQUEST = axios.create({
-  baseURL: `${host}/api/v1/building`,
-});
+// export const BOS_HTTP_REQUEST = axios.create({
+  // baseURL: `${host}/api/v1/building`,
+// });
 
 // if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
 //   baseURL = "http://localhost:8064/api/v1/pam";
