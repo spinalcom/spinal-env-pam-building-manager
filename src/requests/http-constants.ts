@@ -29,6 +29,11 @@ const host = (process.env.SPINAL_API_URL || "").replace(`/\/$/`, el => "");
 const baseURL = host.match(new RegExp(endpoint)) ? host : host + endpoint;
 
 export const HTTP = axios.create({ baseURL });
+HTTP.interceptors.request.use((request: any) => {
+  const t = localStorage.getItem('token');
+  if (t) request.headers.common.Authorization = `Bearer ${t}`;
+  return request;
+});
 
 // export const BOS_HTTP_REQUEST = axios.create({
   // baseURL: `${host}/api/v1/building`,
