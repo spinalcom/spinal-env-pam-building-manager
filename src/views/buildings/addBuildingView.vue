@@ -55,73 +55,149 @@ with this file. If not, see
 
       </div>
 
-      <div class="form">
-        <v-row>
-          <v-col cols="6">
-            <v-text-field dense
-                          hide-details
-                          label="Name"
-                          v-model.trim="building.name"
-                          outlined></v-text-field>
+      <div class="selection">
+        <v-stepper v-model="stepperData"
+                   vertical
+                   flat
+                   max-height="100%"
+                   min-height="300px">
+          <v-stepper-step step="1"
+                          editable>
+            Informations du batiment
+          </v-stepper-step>
 
-            <v-text-field dense
-                          hide-details
-                          label="BOS Url"
-                          v-model.trim="building.bosUrl"
-                          outlined></v-text-field>
+          <v-stepper-content step="1">
+            <div class="form">
+              <v-row>
+                <v-col cols="6">
+                  <v-text-field dense
+                                hide-details
+                                label="Name"
+                                v-model.trim="building.name"
+                                outlined></v-text-field>
 
-            <!-- @change="addressChanged" -->
+                  <v-text-field dense
+                                hide-details
+                                label="BOS Url"
+                                v-model.trim="building.bosUrl"
+                                outlined></v-text-field>
 
-          </v-col>
+                </v-col>
 
-          <v-col cols="6">
-            <v-text-field dense
-                          hide-details
-                          label="Alias"
-                          v-model.trim="building.aliasName"
-                          outlined></v-text-field>
+                <v-col cols="6">
+                  <v-text-field dense
+                                hide-details
+                                label="Alias"
+                                v-model.trim="building.aliasName"
+                                outlined></v-text-field>
 
-            <v-text-field dense
-                          hide-details
-                          label="API Url"
-                          v-model.trim="building.apiUrl"
-                          outlined></v-text-field>
+                  <v-text-field dense
+                                hide-details
+                                label="API Url"
+                                v-model.trim="building.apiUrl"
+                                outlined></v-text-field>
 
-          </v-col>
+                </v-col>
 
-          <!-- <v-col>
-            <v-text-field dense
-                          hide-details
-                          label="API client_id"
-                          v-model.trim="building.clientId"
-                          outlined></v-text-field>
+                <v-col cols="12"
+                       class="placesCol">
+                  <places ref="places"
+                          class="addressInput"
+                          v-model="building.address"
+                          placeholder="Address">
+                  </places>
+                </v-col>
 
-            <v-text-field dense
-                          hide-details
-                          label="API client_secret"
-                          v-model.trim="building.clientSecret"
-                          outlined></v-text-field>
-          </v-col> -->
+                <v-col cols="12">
+                  <v-textarea dense
+                              outlined
+                              v-model.trim="building.description"
+                              no-resize
+                              rows="3"
+                              label="Description"></v-textarea>
+                </v-col>
+              </v-row>
+            </div>
+          </v-stepper-content>
 
-          <v-col cols="12"
-                 class="placesCol">
-            <places ref="places"
-                    class="addressInput"
-                    v-model="building.address"
-                    placeholder="Address">
-            </places>
-          </v-col>
+          <v-stepper-step step="2"
+                          editable>
+            Selection des routes disponibles sur ce batiment
+          </v-stepper-step>
 
-          <v-col cols="12">
-            <v-textarea dense
-                        outlined
-                        v-model.trim="building.description"
-                        no-resize
-                        rows="3"
-                        label="Description"></v-textarea>
-          </v-col>
-        </v-row>
+          <v-stepper-content step="2">
+            <v-row class="rows">
+
+              <v-col cols="12"
+                     class="right-col">
+
+                <div class="toolbar">
+                  <div class="title">Apis du batiment</div>
+                  <div class="search">
+                    <v-text-field dense
+                                  v-model="apiSearchText"
+                                  append-icon="mdi-magnify"
+                                  label="Search"
+                                  single-line
+                                  hide-details></v-text-field>
+                  </div>
+                </div>
+
+                <v-data-table v-model="building.apiIds"
+                              :headers="apiHeaders"
+                              :items="apisSearched"
+                              item-key="id"
+                              selectable-key="id"
+                              disable-pagination
+                              hide-default-footer
+                              show-select
+                              class="tableDiv"></v-data-table>
+
+              </v-col>
+            </v-row>
+          </v-stepper-content>
+
+          <v-stepper-step step="3"
+                          editable>
+            Selection des applications disponibles sur ce batiment
+          </v-stepper-step>
+
+          <v-stepper-content step="3">
+            <v-row class="rows">
+              <v-col cols="12"
+                     class="left-col">
+
+                <div class="toolbar">
+                  <div class="title">Applications du batiment</div>
+                  <div class="search">
+                    <v-text-field dense
+                                  v-model="appSearchText"
+                                  append-icon="mdi-magnify"
+                                  label="rechercher"
+                                  single-line
+                                  hide-details></v-text-field>
+                  </div>
+                </div>
+
+                <v-data-table v-model="building.appIds"
+                              :headers="appHeaders"
+                              :items="appsSearched"
+                              item-key="id"
+                              selectable-key="id"
+                              disable-pagination
+                              hide-default-footer
+                              show-select
+                              class="tableDiv"></v-data-table>
+
+              </v-col>
+
+            </v-row>
+          </v-stepper-content>
+
+        </v-stepper>
       </div>
+
+      <!-- 
 
       <div class="selection">
         <v-row class="rows">
@@ -179,30 +255,9 @@ with this file. If not, see
 
           </v-col>
         </v-row>
-      </div>
+      </div> -->
     </v-card>
 
-    <!-- <div class="header creationHeader">
-      <v-btn outlined
-             color="#ffffff"
-             @click="cancelCreation">
-        <v-icon left> mdi-arrow-left </v-icon>
-        BACK
-      </v-btn>
-
-      <div class="text-h5">
-        {{ isEdit ? "Edit Building" : "Add Building" }}
-      </div>
-      <div class="text-h5"></div>
-    </div>
-    <div class="content">
-      <add-patrimoine-form :edit="isEdit"
-                           :buildingToEdit="buildingToEdit"
-                           @geoLocate="geoLocate"
-                           @cancel="cancelCreation"
-                           @submit="addbuildingToPatrimoine">
-      </add-patrimoine-form>
-    </div> -->
   </div>
 </template>
 
@@ -224,6 +279,8 @@ class AddBuilding extends Vue {
   @Prop() portofolioSelected!: IPortofolio;
   @Prop() buildingSelected!: any;
   @Prop() edit!: boolean;
+
+  stepperData: number = 1;
 
   building: any = {};
 
@@ -391,40 +448,6 @@ class AddBuilding extends Vue {
 }
 
 export default AddBuilding;
-
-// import AddPatrimoineForm from "../old/addBuildingForm.vue";
-
-// export default {
-//   name: "addBuilding",
-//   components: {
-//     AddPatrimoineForm,
-//   },
-//   props: ["isEdit", "buildingToEdit"],
-//   data() {
-//     return {
-//       data: null,
-//     };
-//   },
-//   mounted() {
-//     if (this.isEdit) this.data = this.buildingToEdit;
-//   },
-//   methods: {
-//     geoLocate() {
-//       this.$emit("geoLocate");
-//     },
-//     cancelCreation() {
-//       this.$emit("cancel");
-//     },
-//     addbuildingToPatrimoine(data) {
-//       this.$emit("submit", data);
-//     },
-//   },
-//   watch: {
-//     buildingToEdit() {
-//       this.data = this.buildingToEdit;
-//     },
-//   },
-// };
 </script>
 
 <style scoped lang="scss">
@@ -433,11 +456,7 @@ $form-header: 70px;
 ._container {
   width: 100%;
   height: calc(100%);
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: center;
-  // align-items: center;
-  // background: red;
+
   .header {
     width: 100%;
     height: $form-header;
@@ -469,36 +488,33 @@ $form-header: 70px;
         margin-left: 20px;
       }
     }
-    .form {
-      width: 100%;
-      height: 35%;
-      .v-input {
-        margin: 12px 0;
-      }
-      .placesCol {
-        padding: 0 12px;
-        .addressInput {
-          height: 40px;
-          // margin-bottom: 20px;
-          border: 1px solid grey;
-        }
-      }
-    }
 
     .selection {
       $toolbar-height: 50px;
-
       width: 100%;
-      height: calc(65% - #{$backDiv-height});
+      height: calc(100% - #{$backDiv-height});
+
+      .form {
+        width: 100%;
+        height: 35%;
+        .v-input {
+          margin: 12px 0;
+        }
+        .placesCol {
+          padding: 0 12px;
+          .addressInput {
+            height: 40px;
+            // margin-bottom: 20px;
+            border: 1px solid grey;
+          }
+        }
+      }
+
       .rows {
         width: 100%;
         height: 100%;
         margin-top: 5px;
         padding: 0 5px;
-
-        .left-col {
-          border-right: 1px solid grey;
-        }
 
         .left-col,
         .right-col {
@@ -520,13 +536,18 @@ $form-header: 70px;
               text-overflow: ellipsis;
             }
           }
+        }
+      }
 
-          .tableDiv {
-            width: 100%;
-            height: calc(100% - #{$toolbar-height});
-            position: relative;
-            overflow: auto;
-          }
+      .v-stepper__content {
+        min-height: 30px;
+        max-height: 600px;
+        .tableDiv {
+          width: 100%;
+          height: calc(550px - #{$toolbar-height});
+          // height: calc(100% - #{$toolbar-height});
+          position: relative;
+          overflow: auto;
         }
       }
     }

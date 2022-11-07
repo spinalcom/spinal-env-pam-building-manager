@@ -54,73 +54,104 @@ with this file. If not, see
     </div>
 
     <div class="content">
-      <v-row class="name">
-        <v-col cols="6">
-          <v-text-field block
-                        outlined
-                        v-model="portofolio.name"
-                        required
-                        label="Nom du portefolio"></v-text-field>
-        </v-col>
-      </v-row>
 
-      <v-divider></v-divider>
+      <v-stepper vertical
+                 v-model="stepperData"
+                 flat
+                 max-height="100%"
+                 min-height="300px">
+        <v-stepper-step editable
+                        step="1">Informations du Portofolio</v-stepper-step>
+        <v-stepper-content step="1">
+          <v-row class="name">
+            <v-col cols="6">
+              <v-text-field block
+                            outlined
+                            v-model="portofolio.name"
+                            required
+                            label="Nom du portefolio"></v-text-field>
+            </v-col>
+          </v-row>
+        </v-stepper-content>
 
-      <v-row class="rows">
-        <v-col cols="6"
-               class="left-col">
+        <!-- Second Step -->
 
-          <div class="toolbar">
-            <div class="title">Application Patrimoniales</div>
-            <div class="search">
-              <v-text-field dense
-                            v-model="appSearchText"
-                            append-icon="mdi-magnify"
-                            label="rechercher"
-                            single-line
-                            hide-details></v-text-field>
-            </div>
-          </div>
+        <v-stepper-step editable
+                        step="2">
+          Selection des routes disponibles
+        </v-stepper-step>
+        <v-stepper-content step="2">
+          <v-row class="rows">
+            <v-col cols="12"
+                   class="right-col">
 
-          <v-data-table v-model="portofolio.appIds"
-                        :headers="appHeaders"
-                        :items="appsSearched"
-                        item-key="id"
-                        selectable-key="id"
-                        disable-pagination
-                        hide-default-footer
-                        show-select
-                        class="tableDiv"></v-data-table>
+              <div class="toolbar">
+                <div class="title">Apis Patrimoniales</div>
+                <div class="search">
+                  <v-text-field dense
+                                v-model="apiSearchText"
+                                append-icon="mdi-magnify"
+                                label="Search"
+                                single-line
+                                hide-details></v-text-field>
+                </div>
+              </div>
 
-        </v-col>
+              <v-data-table v-model="portofolio.apiIds"
+                            :headers="apiHeaders"
+                            :items="apisSearched"
+                            item-key="id"
+                            selectable-key="id"
+                            disable-pagination
+                            hide-default-footer
+                            show-select
+                            class="tableDiv"></v-data-table>
 
-        <v-col cols="6"
-               class="right-col">
+            </v-col>
+          </v-row>
+        </v-stepper-content>
 
-          <div class="toolbar">
-            <div class="title">Apis Patrimoniales</div>
-            <div class="search">
-              <v-text-field dense
-                            v-model="apiSearchText"
-                            append-icon="mdi-magnify"
-                            label="Search"
-                            single-line
-                            hide-details></v-text-field>
-            </div>
-          </div>
+        <!-- Third Step -->
 
-          <v-data-table v-model="portofolio.apiIds"
-                        :headers="apiHeaders"
-                        :items="apisSearched"
-                        item-key="id"
-                        selectable-key="id"
-                        disable-pagination
-                        hide-default-footer
-                        show-select
-                        class="tableDiv"></v-data-table>
+        <v-stepper-step editable
+                        step="3">
+          Selection des applications disponibles
+        </v-stepper-step>
+        <v-stepper-content step="3">
 
-        </v-col>
-      </v-row>
+          <v-row class="rows">
+            <v-col cols="12"
+                   class="left-col">
+
+              <div class="toolbar">
+                <div class="title">Application Patrimoniales</div>
+                <div class="search">
+                  <v-text-field dense
+                                v-model="appSearchText"
+                                append-icon="mdi-magnify"
+                                label="rechercher"
+                                single-line
+                                hide-details></v-text-field>
+                </div>
+              </div>
+
+              <v-data-table v-model="portofolio.appIds"
+                            :headers="appHeaders"
+                            :items="appsSearched"
+                            item-key="id"
+                            selectable-key="id"
+                            disable-pagination
+                            hide-default-footer
+                            show-select
+                            class="tableDiv"></v-data-table>
+
+            </v-col>
+          </v-row>
+
+        </v-stepper-content>
+
+      </v-stepper>
+
     </div>
 
   </v-card>
@@ -147,6 +178,8 @@ class PortofolioCreation extends Vue {
 
   @Prop() edit!: boolean;
   @Prop() portofolioSelected!: IPortofolio;
+
+  stepperData: number = 1;
 
   appsSearched: IApp[] = [];
   appSearchText: string = "";
@@ -355,10 +388,6 @@ $toolbar-height: 50px;
       margin-top: 5px;
       padding: 0 5px;
 
-      .left-col {
-        border-right: 1px solid grey;
-      }
-
       .left-col,
       .right-col {
         padding: 5px;
@@ -379,13 +408,18 @@ $toolbar-height: 50px;
             text-overflow: ellipsis;
           }
         }
+      }
+    }
 
-        .tableDiv {
-          width: 100%;
-          height: calc(100% - #{$toolbar-height});
-          position: relative;
-          overflow: auto;
-        }
+    .v-stepper__content {
+      min-height: 30px;
+      max-height: 600px;
+      .tableDiv {
+        width: 100%;
+        height: calc(550px - #{$toolbar-height});
+        // height: calc(100% - #{$toolbar-height});
+        position: relative;
+        overflow: auto;
       }
     }
   }
